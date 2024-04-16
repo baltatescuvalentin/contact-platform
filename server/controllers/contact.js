@@ -121,14 +121,31 @@ export const getContactsByUserEmail = async (req, res) => {
             userEmail,
         } = req.body;
 
-        const contacts = await Contact.findAll({ attributes: ['email', 'firstname', 'lastname', 'phone', 'contactUUID']}
-            ,{ where: { userEmail: userEmail }});
+
+
+        const contacts = await Contact.findAll( { where: { userEmail: userEmail }},
+            { attributes: ['email', 'firstname', 'lastname', 'phone', 'contactUUID']});
 
         res.status(200).json({
             contacts: contacts,
         })
     }
     catch(error) {
+        res.status(500).json({
+            error: error.message,
+        })
+    }
+}
+
+export const getAllContacts = async (req, res) => {
+    try {
+        const contacts = await Contact.findAll();
+
+        res.status(200).json({
+            contacts: contacts,
+        })
+    }
+    catch (error) {
         res.status(500).json({
             error: error.message,
         })
