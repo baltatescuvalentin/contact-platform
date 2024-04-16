@@ -10,7 +10,6 @@ import contactDetailsRoutes from './routes/contactdetails.js';
 import User from './models/User.js';
 import Contact from './models/Contact.js';
 import ContactDetails from './models/ContactDetails.js';
-import setupAssociations from './models/associations.js';
 
 dotenv.config();
 const app = express();
@@ -35,11 +34,11 @@ Contact.belongsTo(User, {
 });
 
 Contact.hasMany(ContactDetails, {
-    foreignKey: 'contactEmail',
+    foreignKey: 'contactUUID',
     onDelete: 'cascade',
 });
 ContactDetails.belongsTo(Contact, {
-    foreignKey: 'contactEmail',
+    foreignKey: 'contactUUID',
 });
 
 await dbConnection().then(() => {

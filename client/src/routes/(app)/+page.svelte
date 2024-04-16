@@ -1,9 +1,11 @@
+<script lang="ts">
 
+</script>
 
-<h1 class="test">Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-<a href="/logout">Logout</a>
-<a href="/contacts">Contacts</a>
+<div class="home_wrapper">
+    <h1 class="test">Welcome to Contact Platform</h1>
+    <h2>Feel free to use the navbar to navigate</h2>
+</div>
 
 <style lang="scss" global>
     @import '../../styles/styles.scss';

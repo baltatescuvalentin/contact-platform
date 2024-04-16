@@ -46,7 +46,7 @@ export const registerUser = async (req, res) => {
     }   
     catch(error) {
         res.status(500).json({
-            error: error,
+            error: error.message,
         })
     }
 }
@@ -62,7 +62,7 @@ export const login = async (req, res) => {
 
         if (!user) {
             return res.status(404).json({
-                message: 'Username not correct',
+                message: 'Username does not exist/incorrect',
             })
         }
 
@@ -86,7 +86,7 @@ export const login = async (req, res) => {
     }
     catch(error) {
         res.status(500).json({
-            error: error,
+            error: error.message,
         })
     }
 }
@@ -117,7 +117,38 @@ export const getUserInformation = async (req, res) => {
     }
     catch(error) {
         res.status(500).json({
-            error: error,
+            error: error.message,
+        })
+    }
+}
+
+export const resetPassword = async (req, res) => {
+    try {
+        const {
+            email,
+            password,
+        } = req.body;
+
+        const userExists = await User.findOne({ where: { email: email }});
+
+        if (!userExists) {
+            return res.status(404).json({
+                message: 'User does not exists',
+            });
+        }
+
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        await userExists.update({ password: hashedPassword });
+
+        res.status(200).json({
+            message: 'Password has been reseted',
+        })
+    }
+    catch (error) {
+        res.status(500).json({
+            error: error.message,
         })
     }
 }

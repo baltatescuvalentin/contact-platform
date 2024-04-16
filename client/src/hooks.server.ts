@@ -1,4 +1,5 @@
 import { VITE_JWT_SECRET } from "$env/static/private";
+import { JWT_SECRET } from "$lib/utils/variables";
 import type { Handle } from "@sveltejs/kit";
 import jwt, { type JwtPayload } from 'jsonwebtoken';
 
@@ -12,6 +13,7 @@ export const handle: Handle = async ({ event, resolve }) => {
         }
 
         if (authToken) {
+            // change VITE_JWT_SECRET here with JWT_SECRET
             const claims: string | JwtPayload = jwt.verify(authToken, VITE_JWT_SECRET);  
             
             if (!claims || typeof claims === 'string') {
@@ -19,7 +21,6 @@ export const handle: Handle = async ({ event, resolve }) => {
             }
             else {
                 const { email } = claims;
-                console.log(claims['email']);
                 const data = {
                     email: claims.email,
                 }
@@ -38,8 +39,6 @@ export const handle: Handle = async ({ event, resolve }) => {
                     lastname: json.userData.lastname,
                     email: json.userData.email,
                 };
-
-                console.log(event.locals.user);
             }
         }
     }

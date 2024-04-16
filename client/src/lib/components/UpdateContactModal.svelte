@@ -1,13 +1,16 @@
 <script lang="ts">
     import { invalidateAll } from '$app/navigation';
-    import type { AddContactFormType, ContactInfoType } from '$lib/utils/types';
+    import type { AddContactFormType, ContactInfoType, UpdateContactFormType, UpdateDetailsFromType } from '$lib/utils/types';
     import { CircleX } from 'lucide-svelte';
     import { page } from '$app/stores';
     import * as yup from 'yup';
 
     export let showModal: boolean;
-    export let userEmail: string;
+    export let contactUUID: string;
     export let token: string;
+    export let contactInfoValues: UpdateContactFormType;
+    export let detailsInfoValues: UpdateDetailsFromType;
+    export let triggerModal: () => void;
     export let refetchData: () => Promise<void>;
 
     let dialog: HTMLDialogElement;
@@ -31,16 +34,16 @@
     let submitError: string = "";
 
     let values: AddContactFormType = {
-        phone: "",
-        firstname: "",
-        lastname: "",
-        email: "",
-        county: "",
-        city: "",
-        street: "",
-        block: "",
-        entrance: "",
-        apartment: "",
+        phone: contactInfoValues.phone || "",
+        firstname: contactInfoValues.firstname || "",
+        lastname: contactInfoValues.lastname || "",
+        email: contactInfoValues.email || "",
+        county: detailsInfoValues.county || "",
+        city: detailsInfoValues.city || "",
+        street: detailsInfoValues.street || "",
+        block: detailsInfoValues.block || "",
+        entrance: detailsInfoValues.entrance || "",
+        apartment: detailsInfoValues.apartment || "",
     }
 
     const schema = yup.object().shape({
@@ -77,24 +80,21 @@
                 phone: values.phone,
                 firstname: values.firstname,
                 lastname: values.lastname,
-                userEmail: userEmail,
+                contactUUID: contactUUID,
             }
 
-            const response1 = await fetch('http://localhost:3001/contact/create', {
-                method: 'POST',
+            const response1 = await fetch('http://localhost:3001/contact/update', {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(contactData),
             });
 
             const status1 = response1.status;
-            const contactUUIDJson = await response1.json();
 
-            if (status1 === 201) {
-
-                const contactUUID = contactUUIDJson.contactUUID;
+            if (status1 === 200) {
 
                 const detailsData = {
                     county: values.county,
@@ -106,8 +106,8 @@
                     contactUUID: contactUUID,
                 }
 
-                const response2 = await fetch('http://localhost:3001/contactdetails/create', {
-                    method: 'POST',
+                const response2 = await fetch('http://localhost:3001/contactdetails/update', {
+                    method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`,
@@ -117,19 +117,7 @@
 
                 const status2 = response2.status;
 
-                if (status2 === 201) {
-                    values = {
-                        phone: "",
-                        firstname: "",
-                        lastname: "",
-                        email: "",
-                        county: "",
-                        city: "",
-                        street: "",
-                        block: "",
-                        entrance: "",
-                        apartment: "",
-                    }
+                if (status2 === 200) {
                     dialog.close();
                     invalidateAll();
                     refetchData();
@@ -157,12 +145,12 @@
 
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<dialog bind:this={dialog} on:close={() => (showModal = false)} class="dialog_add_contact">
+<dialog bind:this={dialog} on:close={triggerModal} class="dialog_add_contact">
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div on:click|stopPropagation>
         <div class="dialog_add_contact_header">
-            <h2>Add contact</h2>
+            <h2>Update contact</h2>
             <button on:click={() => dialog.close()}><CircleX color="red" size=34/></button>
         </div>
         <hr />

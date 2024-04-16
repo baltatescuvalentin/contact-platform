@@ -20,13 +20,13 @@ export const createContact = async (req, res) => {
             })
         }
 
-        const contactExists = await Contact.findOne({ where: { email: email }});
+        // const contactExists = await Contact.findOne({ where: { email: email }});
 
-        if (contactExists) {
-            return res.status(400).json({
-                message: 'Contact already exists!',
-            })
-        }
+        // if (contactExists) {
+        //     return res.status(400).json({
+        //         message: 'Contact already exists!',
+        //     })
+        // }
 
         const contactUUID = uuid4();
 
@@ -41,11 +41,12 @@ export const createContact = async (req, res) => {
 
         res.status(201).json({
             message: 'Contact successfully added',
+            contactUUID: contactUUID,
         })
     }
     catch(error) {
         res.status(500).json({
-            error: error,
+            error: error.message,
         })
     }
 }
@@ -53,10 +54,10 @@ export const createContact = async (req, res) => {
 export const deleteContact = async (req, res) => {
     try {
         const {
-            email,
+            contactUUID,
         } = req.body;
 
-        const contactExists = await Contact.findOne({ where: { email: email }});
+        const contactExists = await Contact.findOne({ where: { contactUUID: contactUUID }});
 
         if (!contactExists) {
             return res.status(404).json({
@@ -64,14 +65,14 @@ export const deleteContact = async (req, res) => {
             })
         }
 
-        await Contact.destroy({ where: { email: email }});
+        await Contact.destroy({ where: { contactUUID: contactUUID }});
         res.status(200).json({
             message: 'Contact deleted successfully',
         })
     }
     catch(error) {
         res.status(500).json({
-            error: error,
+            error: error.message,
         })
     }
 }
@@ -82,11 +83,12 @@ export const updateContact = async (req, res) => {
             email,
             phone,
             firstname,
-            lastname
+            lastname,
+            contactUUID
         } = req.body;
 
         const existsContact = await Contact.findOne({
-            where: { email: email }
+            where: { contactUUID: contactUUID }
         });
 
         if (!existsContact) {
@@ -100,10 +102,10 @@ export const updateContact = async (req, res) => {
             phone: phone,
             firstname: firstname,
             lastname: lastname,
-        });
+        }, { where: { contactUUID: contactUUID }});
 
         res.status(200).json({
-            contact: updateContact,
+            updatedContact: updatedContact,
         })
     }
     catch(error) {
@@ -128,7 +130,7 @@ export const getContactsByUserEmail = async (req, res) => {
     }
     catch(error) {
         res.status(500).json({
-            error: error,
+            error: error.message,
         })
     }
 }
@@ -152,7 +154,7 @@ export const getContactByUUID = async (req, res) => {
     }
     catch(error) {
         res.status(500).json({
-            error: error,
+            error: error.message,
         })
     }
 }

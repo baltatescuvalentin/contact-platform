@@ -7,14 +7,7 @@ export const load: PageServerLoad = async ({ cookies, locals }) => {
     if (!locals.user) {
         redirect(302, '/login')
     }
-
-    // let cookie: string | undefined;
-    // if (cookies.get('AuthorizationToken')) {
-    //     cookie = cookies.get('AuthorizationToken');
-    // }
-    // else {
-    //     redirect(302, '/login');
-    // }
+    
     const cookie: string | undefined = cookies.get('AuthorizationToken');
 
     const userEmail: string = locals.user.email;
@@ -36,9 +29,12 @@ export const load: PageServerLoad = async ({ cookies, locals }) => {
     const json = await response.json();
 
     if (status === 403) {
-        console.log('39 verify token fail');
         redirect(302, '/login');
     }
+
+    if (status === 500) {
+        redirect(302, '/');
+    } 
 
     return {
         cookie,

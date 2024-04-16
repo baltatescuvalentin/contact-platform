@@ -21,11 +21,11 @@ const ContactDetails = sequelize.define('ContactDetails', {
     apartment: {
         type: DataTypes.STRING,
     },
-    contactEmail: {
+    contactUUID: {
         type: DataTypes.STRING,
         references: {
             model: Contact,
-            key: 'email',
+            key: 'contactUUID',
         }
     }
 });

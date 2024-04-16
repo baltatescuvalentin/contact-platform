@@ -9,7 +9,7 @@ export const createContactDetails = async (req, res) => {
             block,
             entrance,
             apartment,
-            contactEmail,
+            contactUUID,
         } = req.body;
 
         const newDetails = await ContactDetails.create({
@@ -19,7 +19,7 @@ export const createContactDetails = async (req, res) => {
             block,
             entrance,
             apartment,
-            contactEmail
+            contactUUID
         });
 
         res.status(201).json({
@@ -28,7 +28,7 @@ export const createContactDetails = async (req, res) => {
     }
     catch(error) {
         res.status(500).json({
-            error: error,
+            error: error.message,
         });
     }
 }
@@ -36,7 +36,7 @@ export const createContactDetails = async (req, res) => {
 export const updateContactDetails = async (req, res) => {
     try {
         const {
-            contactEmail,
+            contactUUID,
             county,
             city,
             street,
@@ -44,6 +44,16 @@ export const updateContactDetails = async (req, res) => {
             entrance,
             apartment,
         } = req.body;
+
+        const existsContact = await ContactDetails.findOne({
+            where: { contactUUID: contactUUID }
+        });
+
+        if (!existsContact) {
+            return res.status(404).json({
+                message: 'Contact does not exist',
+            })
+        }
 
         const updatedDetails = await ContactDetails.update({
             county,
@@ -52,15 +62,15 @@ export const updateContactDetails = async (req, res) => {
             block,
             entrance,
             apartment,
-        }, { where: { contactEmail: contactEmail }});
+        }, { where: { contactUUID: contactUUID }});
 
         res.status(200).json({
-            newDetails: updatedDetails,
+            updatedDetails: updatedDetails,
         })
     }
     catch(error) {
         res.status(500).json({
-            error: error,
+            error: error.message,
         });
     }
 }
@@ -68,11 +78,11 @@ export const updateContactDetails = async (req, res) => {
 export const getDetailsOfContact = async (req, res) => {
     try {
         const {
-            contactEmail,
+            contactUUID,
         } = req.body;
 
         const details = await ContactDetails.findOne({
-            where: { contactEmail: contactEmail }
+            where: { contactUUID: contactUUID }
         });
 
         res.status(200).json({
@@ -88,7 +98,7 @@ export const getDetailsOfContact = async (req, res) => {
     }
     catch(error) {
         res.status(500).json({
-            error: error,
+            error: error.message,
         });
     }
 }
@@ -96,10 +106,10 @@ export const getDetailsOfContact = async (req, res) => {
 export const deleteContactDetails = async (req, res) => {
     try {
         const {
-            contactEmail,
+            contactUUID
         } = req.body;
 
-        const existsDetails = await ContactDetails.findOne({ where: { contactEmail: contactEmail }});
+        const existsDetails = await ContactDetails.findOne({ where: { contactUUID: contactUUID }});
 
         if (!existsDetails) {
             return res.status(404).json({
@@ -107,7 +117,7 @@ export const deleteContactDetails = async (req, res) => {
             })
         }
 
-        await ContactDetails.destroy({ where: { contactEmail: contactEmail }});
+        await ContactDetails.destroy({ where: { contactUUID: contactUUID }});
 
         res.status(200).json({
             message: 'Details successfully deleted'
@@ -115,7 +125,7 @@ export const deleteContactDetails = async (req, res) => {
     }
     catch (error) {
         res.status(500).json({
-            error: error,
+            error: error.message,
         });
     }
 }

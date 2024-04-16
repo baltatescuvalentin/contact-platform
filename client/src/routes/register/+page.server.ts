@@ -35,12 +35,9 @@ export const load: PageServerLoad = (event) => {
 export const actions = {
     default: async ({ request }) => {
         const formData = Object.fromEntries(await request.formData());
-
-        console.log(formData);
     
         try {
             await schema.validate(formData, { abortEarly: false });
-            console.log('Successfully validated');
             errors = {
                 email: "",
                 username: "",
@@ -78,17 +75,16 @@ export const actions = {
         const status = response.status;
         const json = await response.json();
 
-        console.log(status, json);
-
-        if (status === 404 || status === 400) {
+        if (status === 201) {
+            redirect(302, '/login')
+        }
+        else {
             return fail(400, { 
                 submit: {
-                    message: json.message,
+                    message: json.message || json.error,
                     problem: true
                 }
             })
         }
-
-        redirect(302, '/login')
     }
 }

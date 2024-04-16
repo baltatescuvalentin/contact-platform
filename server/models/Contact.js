@@ -3,11 +3,9 @@ import { DataTypes } from 'sequelize';
 import User from "./User.js";
 
 const Contact = sequelize.define('Contact', {
-    email: {
+    contactUUID: {
         type: DataTypes.STRING,
-        allowNull: false,
         primaryKey: true,
-        isEmail: true,
     },
     firstname: {
         type: DataTypes.STRING,
@@ -18,7 +16,7 @@ const Contact = sequelize.define('Contact', {
     phone: {
         type: DataTypes.STRING,
     },
-    contactUUID: {
+    email: {
         type: DataTypes.STRING,
     },
     userEmail: {

@@ -10,8 +10,6 @@
     export let contactUUID: string;
 
     const currentPath: string = $page.url.pathname;
-
-    console.log(contactUUID);
 </script>
 
 <div class="contacts_list_details">

@@ -4,11 +4,11 @@
     import Contact from "$lib/components/Contact.svelte";
     import AddContactModal from "$lib/components/AddContactModal.svelte";
     import type { ContactInfoType } from "$lib/utils/types";
+    import { goto } from "$app/navigation";
 
     export let data: PageData;
     const token = data.cookie!;
     let contacts: ContactInfoType[] = data.contacts;
-    console.log(typeof data.contacts);
     let filter: string;
 
     let showModal: boolean = false;
@@ -24,8 +24,8 @@
         else {
             contacts = [];
             data.contacts.forEach((element: ContactInfoType) => {
-                if (element.firstname.includes(filter) || element.lastname.includes(filter) || element.email.includes(filter) || 
-                    element.phone.includes(filter)) {
+                if ((element.firstname).toLowerCase().includes(filter) || (element.lastname).toLowerCase().includes(filter) 
+                || (element.email).toLowerCase().includes(filter) || (element.phone).toLowerCase().includes(filter)) {
                         contacts.push(element);
                     }
             });
@@ -52,14 +52,16 @@
             const contactsJson = await response.json();
             contacts = contactsJson.contacts;
         }
+        else {
+            goto('/');
+        }
     }
 
 </script>
 
-<AddContactModal bind:showModal userEmail={data.userEmail} token={token} refetchData={refetchData}>
-</AddContactModal>
-
 <div class="contacts_container">
+    <AddContactModal bind:showModal userEmail={data.userEmail} token={token} refetchData={refetchData}>
+    </AddContactModal>
     <div class="contacts_wrapper">
         <h1>Contacts</h1>
         <div class="contacts_utils">

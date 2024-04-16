@@ -1,40 +1,31 @@
 import { fail, redirect } from '@sveltejs/kit';
 
 import * as yup from 'yup';
-import type { LoginFormType } from '$lib/utils/types';
-import type { PageServerLoad } from './$types.js';
+import type { ExportFormType } from '$lib/utils/types';
 
-let errors: LoginFormType = {
-    username: "",
+let errors: ExportFormType = {
+    email: "",
     password: "",
+    confirmPassword: "",
 }
 
 const schema = yup.object().shape({
-    username: yup.string().min(6, 'Min username length is 6').required('Username is required'),
+    email: yup.string().email('Email is not valid').required('Username is required'),
     password: yup.string().min(8, 'Min password length is 8').required('Password is required'),
+    confirmPassword: yup.string().required('Confirm password is required').oneOf([yup.ref('password')], "Passwords must match"),
 });
-
-let queryContact: string | undefined;
-
-export const load: PageServerLoad = ({ locals, url }) => {
-    const user = locals.user;
-    queryContact = url.search.split('=')[1];
-
-    if (user) {
-        redirect(302, '/');
-    }
-}
 
 
 export const actions = {
-    default: async ({ request, cookies, url }) => {
+    default: async ({ request}) => {
         const formData = Object.fromEntries(await request.formData());
     
         try {
             await schema.validate(formData, { abortEarly: false });
             errors = {
-                username: "",
+                email: "",
                 password: "",
+                confirmPassword: "",
             }
         }
         catch(error: any) {
@@ -48,12 +39,12 @@ export const actions = {
         }
 
         const data = {
-            username: formData['username'],
+            email: formData['email'],
             password: formData['password'],
         }
 
-        const response = await fetch('http://localhost:3001/auth/login', {
-            method: 'POST',
+        const response = await fetch('http://localhost:3001/auth/resetpassword', {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -64,20 +55,7 @@ export const actions = {
         const json = await response.json();
 
         if (status === 200) {
-            cookies.set('AuthorizationToken', `${json.token}`, {
-                httpOnly: true,
-                path: '/',
-                secure: true,
-                sameSite: 'strict',
-                maxAge: 60 * 60 * 24
-            })
-    
-            if (queryContact) {
-                redirect(302, `/contacts/${queryContact}`);
-            }
-            else {
-                redirect(302, '/');
-            }
+            redirect(302, '/login');
         }
         else {
             return fail(400, { 
