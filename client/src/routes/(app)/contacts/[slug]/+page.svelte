@@ -1,3 +1,4 @@
+<!-- contacts/:id route for specific contact -->
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
@@ -47,7 +48,7 @@
             contactUUID: data.contactUUID,
         }
 
-        const response1 = await fetch('http://localhost:3001/contact/delete', {
+        const response1 = await fetch('https://contact-platform.onrender.com/contact/delete', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -72,7 +73,7 @@
             contactUUID: data.contactUUID,
         }
 
-        const response1 = await fetch('http://localhost:3001/contact/getContactByUUID', {
+        const response1 = await fetch('https://contact-platform.onrender.com/contact/getContactByUUID', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -91,7 +92,7 @@
                 contactUUID: data.contactUUID,
             }
 
-            const response2 = await fetch('http://localhost:3001/contactDetails/getDetailsOfContact', {
+            const response2 = await fetch('https://contact-platform.onrender.com/contactDetails/getDetailsOfContact', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -114,11 +115,11 @@
                 };
             }
             else {
-                goto('/');
+                goto('/logout');
             }
         }
         else {
-            goto('/');
+            goto('/logout');
         }
     }
 

@@ -6,7 +6,7 @@ export const load: PageServerLoad = ({ cookies, locals }) => {
         path: '/',
     });
 
-    locals.user = undefined;
+    locals.user = null;
 
     redirect(302, '/login');
 }

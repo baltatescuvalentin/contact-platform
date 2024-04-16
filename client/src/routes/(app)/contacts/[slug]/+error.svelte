@@ -1,3 +1,4 @@
+<!-- error page for non-existent contact -->
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";

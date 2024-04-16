@@ -43,7 +43,7 @@ export const actions = {
             password: formData['password'],
         }
 
-        const response = await fetch('http://localhost:3001/auth/resetpassword', {
+        const response = await fetch('https://contact-platform.onrender.com/auth/resetpassword', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

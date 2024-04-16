@@ -1,3 +1,4 @@
+<!-- update contact modal -->
 <script lang="ts">
     import { invalidateAll } from '$app/navigation';
     import type { AddContactFormType, ContactInfoType, UpdateContactFormType, UpdateDetailsFromType } from '$lib/utils/types';
@@ -83,7 +84,7 @@
                 contactUUID: contactUUID,
             }
 
-            const response1 = await fetch('http://localhost:3001/contact/update', {
+            const response1 = await fetch('https://contact-platform.onrender.com/contact/update', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -106,7 +107,7 @@
                     contactUUID: contactUUID,
                 }
 
-                const response2 = await fetch('http://localhost:3001/contactdetails/update', {
+                const response2 = await fetch('https://contact-platform.onrender.com/contactdetails/update', {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',

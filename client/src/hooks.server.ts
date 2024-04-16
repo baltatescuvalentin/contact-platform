@@ -3,7 +3,6 @@ import { JWT_SECRET } from "$lib/utils/variables";
 import type { Handle } from "@sveltejs/kit";
 import jwt, { type JwtPayload } from 'jsonwebtoken';
 
-
 export const handle: Handle = async ({ event, resolve }) => {
     const authToken: string | undefined = event.cookies.get('AuthorizationToken');
 
@@ -13,8 +12,8 @@ export const handle: Handle = async ({ event, resolve }) => {
         }
 
         if (authToken) {
-            // change VITE_JWT_SECRET here with JWT_SECRET
-            const claims: string | JwtPayload = jwt.verify(authToken, VITE_JWT_SECRET);  
+            // VITE_JWT_SECRET is in the .env file here with JWT_SECRET from lib/utils/variables
+            const claims: string | JwtPayload = jwt.verify(authToken, JWT_SECRET);  
             
             if (!claims || typeof claims === 'string') {
                 event.locals.user = undefined;
@@ -24,7 +23,7 @@ export const handle: Handle = async ({ event, resolve }) => {
                 const data = {
                     email: claims.email,
                 }
-                const response = await fetch('http://localhost:3001/auth/userdata', {
+                const response = await fetch('https://contact-platform.onrender.com/auth/userdata', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

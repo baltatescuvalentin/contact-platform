@@ -64,7 +64,7 @@ export const actions = {
             lastname: formData['lastname'],
         }
 
-        const response = await fetch('http://localhost:3001/auth/register', {
+        const response = await fetch('https://contact-platform.onrender.com/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

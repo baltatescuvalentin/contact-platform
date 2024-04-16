@@ -1,4 +1,4 @@
-<!-- main contacts -->
+<!-- main /contacts page -->
 <script lang="ts">
     import type { PageData } from "./$types";
     import Contact from "$lib/components/Contact.svelte";
@@ -35,10 +35,10 @@
     const refetchData = async () => {
 
         const fetchData = {
-            email: data.userEmail,
+            userEmail: data.userEmail,
         }
 
-        const response = await fetch('http://localhost:3001/contact/getContactsByUserEmail', {
+        const response = await fetch('https://contact-platform.onrender.com/contact/getContactsByUserEmail', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,7 +53,7 @@
             contacts = contactsJson.contacts;
         }
         else {
-            goto('/');
+            goto('/logout');
         }
     }
 

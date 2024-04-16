@@ -1,6 +1,6 @@
+// main /contacts server page
 import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-
 
 export const load: PageServerLoad = async ({ cookies, locals }) => {
 
@@ -10,17 +10,21 @@ export const load: PageServerLoad = async ({ cookies, locals }) => {
     
     const cookie: string | undefined = cookies.get('AuthorizationToken');
 
+    if (!cookie) {
+        redirect(302, '/login')
+    }
+
     const userEmail: string = locals.user.email;
 
     const data = {
         userEmail: userEmail,
     }
 
-    const response = await fetch('http://localhost:3001/contact/getContactsByUserEmail', {
+    const response = await fetch('https://contact-platform.onrender.com/contact/getContactsByUserEmail', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${cookie!}`,
+            'Authorization': `Bearer ${cookie}`,
         },
         body: JSON.stringify(data),
     });
@@ -31,10 +35,6 @@ export const load: PageServerLoad = async ({ cookies, locals }) => {
     if (status === 403) {
         redirect(302, '/login');
     }
-
-    if (status === 500) {
-        redirect(302, '/');
-    } 
 
     return {
         cookie,

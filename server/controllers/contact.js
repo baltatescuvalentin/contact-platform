@@ -121,8 +121,6 @@ export const getContactsByUserEmail = async (req, res) => {
             userEmail,
         } = req.body;
 
-
-
         const contacts = await Contact.findAll( { where: { userEmail: userEmail }},
             { attributes: ['email', 'firstname', 'lastname', 'phone', 'contactUUID']});
 

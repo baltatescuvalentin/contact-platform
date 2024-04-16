@@ -1,3 +1,4 @@
+// contacts/:id server page
 import { error, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
@@ -15,7 +16,7 @@ export const load: PageServerLoad = async ({ params, cookies, locals }) => {
             contactUUID: slug,
         }
 
-        const response1 = await fetch('http://localhost:3001/contact/getContactByUUID', {
+        const response1 = await fetch('https://contact-platform.onrender.com/contact/getContactByUUID', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,7 +34,7 @@ export const load: PageServerLoad = async ({ params, cookies, locals }) => {
                 contactUUID: slug,
             }
 
-            const response2 = await fetch('http://localhost:3001/contactDetails/getDetailsOfContact', {
+            const response2 = await fetch('https://contact-platform.onrender.com/contactDetails/getDetailsOfContact', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,3 +1,4 @@
+<!-- contact component for each saved contact in the contacts route -->
 <script lang="ts">
     import { goto } from '$app/navigation';
     import { page } from '$app/stores';

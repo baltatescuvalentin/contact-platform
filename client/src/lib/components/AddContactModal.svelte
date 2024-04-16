@@ -1,3 +1,4 @@
+<!-- add contact modal -->
 <script lang="ts">
     import { invalidateAll } from '$app/navigation';
     import type { AddContactFormType, ContactInfoType } from '$lib/utils/types';
@@ -80,7 +81,7 @@
                 userEmail: userEmail,
             }
 
-            const response1 = await fetch('http://localhost:3001/contact/create', {
+            const response1 = await fetch('https://contact-platform.onrender.com/contact/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -106,7 +107,7 @@
                     contactUUID: contactUUID,
                 }
 
-                const response2 = await fetch('http://localhost:3001/contactdetails/create', {
+                const response2 = await fetch('https://contact-platform.onrender.com/contactdetails/create', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
